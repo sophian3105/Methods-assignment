@@ -7,6 +7,11 @@ import java.util.Scanner;
 // More packages may be imported in the space below
 
 class CustomerSystem{
+    // Declaring global variables to later store in customer data file
+    public static String first;
+    public static String last;
+    public static String city;
+    public static String postal;
     public static void main(String[] args){
         // Please do not edit any of these variables
         Scanner reader = new Scanner(System.in);
@@ -50,12 +55,22 @@ class CustomerSystem{
         .concat("Enter menu option (1-9)\n")
         );
     }
-    /*
-    * This method may be edited to achieve the task however you like.
-    * The method may not nesessarily be a void return type
-    * This method may also be broken down further depending on your algorithm
-    */
-    public static void enterCustomerInfo() {
+    /* @author Sophia Nguyen
+     * Introduces user to program and also stores their information
+     * @param none
+     * @return The user inputs for the questions to be later used in a different method
+     */
+    public static String enterCustomerInfo(){
+        Scanner reader = new Scanner(System.in);
+        // Storing customer information
+        System.out.println("What is your first name?");
+        CustomerSystem.first = reader.nextLine();
+        System.out.println("What is your last name?");
+        CustomerSystem.last = reader.nextLine();
+        System.out.println("Where are you from?");
+        CustomerSystem.city = reader.nextLine();
+        String info = ("Hello " + first + " " + last + " from " + city);
+        return info;
     }
     /*
     * This method may be edited to achieve the task however you like.
