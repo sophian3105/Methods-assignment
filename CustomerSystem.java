@@ -2,16 +2,13 @@
 
 
 
-
+import java.io.IOException;
 import java.util.Scanner;
+import java.io.*;
+import java.io.File;
 // More packages may be imported in the space below
 
 class CustomerSystem{
-    // Declaring global variables to later store in customer data file
-    public static String first;
-    public static String last;
-    public static String city;
-    public static String postal;
     public static void main(String[] args){
         // Please do not edit any of these variables
         Scanner reader = new Scanner(System.in);
@@ -60,24 +57,83 @@ class CustomerSystem{
      * @param none
      * @return The user inputs for the questions to be later used in a different method
      */
-    public static String enterCustomerInfo(){
+    public static void enterCustomerInfo(){
+        String code = "";
+        String name = "";
         Scanner reader = new Scanner(System.in);
         // Storing customer information
         System.out.println("What is your first name?");
-        CustomerSystem.first = reader.nextLine();
+        String first = reader.nextLine();
         System.out.println("What is your last name?");
-        CustomerSystem.last = reader.nextLine();
+        String last = reader.nextLine();
         System.out.println("Where are you from?");
-        CustomerSystem.city = reader.nextLine();
-        String info = ("Hello " + first + " " + last + " from " + city);
-        return info;
+        String city = reader.nextLine();
+        //Calling postal code validation method
+        validatePostalCode(code,name);
     }
-    /*
-    * This method may be edited to achieve the task however you like.
-    * The method may not nesessarily be a void return type
-    * This method may also be broken down further depending on your algorithm
-    */
-    public static void validatePostalCode(){
+    /* @author Sophia Nguyen
+     * Validates the postal code by scanning the first 3 characters that is inputted
+     * This is a procedural method because there is no return
+     * @param none
+     * @return none
+     */
+    public static String validatePostalCode(String postal, String user){
+        Scanner reader = new Scanner(System.in);
+        try{ 
+            // Finding the postal code file for comparison
+            System.out.println("Please input your username on your local machine");
+            user = reader.nextLine();
+            System.out.println("Please input where you placed the Methods-assignment folder");
+            String loc = reader.nextLine();
+            // User must type in a correct postal code or program will loop
+            boolean valid = false;
+            do{
+                // Reading the postal code file
+                File file = new File("/Users/" + user + "/" + loc + "/Methods-assignment/PostalCode.csv");
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                // User must type in at least 3 characters
+                boolean enough = false;
+                do{
+                    System.out.println("What is your postal code? Please input at least 3 characters and make sure it is correct or program will loop.");
+                    postal = reader.nextLine();
+                        if (calculateCharacters(postal)>=3){
+                            String line;
+                            while ((line = br.readLine()) != null && valid == false){
+                                // Takes 3 characters from both user input and postal codes to compare
+                                String newPostal = postal.substring(0,3);
+                                String compare = line.substring(0, 3);
+                                // If there are no differences then that means the postal codes are the same so it is valid
+                                if(compare.compareTo(newPostal) == 0){
+                                    System.out.println("Valid");
+                                    valid = true;
+                                }
+                                else{
+                                    valid = false;
+                                }
+                            }
+                            enough = true;
+                        }
+                    else{
+                        System.out.println("Invalid, please input at least 3 characters");
+                        enough = false;
+                    }
+                }while(enough == false);
+            }while(valid==false);
+        }
+        // Program cannot find file
+        catch (IOException e){ 
+            System.out.println("Invalid");
+        }
+        return postal;
+    }
+    /* @author Sophia Nguyen
+     * Calculates the amount of characters in a string to be used in a different method
+     * @param A string that the method counts the characters of
+     * @return The amount of characters in a string
+     */
+    public static int calculateCharacters(String x){
+        int len = x.length();
+        return len;
     }
     /*
     * This method may be edited to achieve the task however you like.
