@@ -18,10 +18,9 @@ class CustomerSystem{
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        System.out.println("What is your username on your local machine?");
-        String username = reader.nextLine();
-        System.out.println("Where did you put the Methods-assignment folder?");
-        String place = reader.nextLine();
+        // Asks the user for their username and location so that program can determine the pathway it needs to take
+        System.out.println("What is the pathway you need to take to get to the Method-assignment folder?");
+        String pathway = reader.nextLine();
 
 
         do{
@@ -31,11 +30,11 @@ class CustomerSystem{
             if (userInput.equals(enterCustomerOption)){
                 // Only the line below may be editted based on the parameter list and how you design the method return
 		        // Any necessary variables may be added to this if section, but nowhere else in the code
-                enterCustomerInfo();
+                enterCustomerInfo(reader,pathway);
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                generateCustomerDataFile(reader,username,place);
+                generateCustomerDataFile(reader,pathway);
             }
             else{
                 System.out.println("Please type in a valid option (A number from 1-9)");
@@ -58,13 +57,12 @@ class CustomerSystem{
     }
     /* @author Sophia Nguyen
      * Introduces user to program and also stores their information
-     * @param none
-     * @return The user inputs for the questions to be later used in a different method
+     * Procedural method with no returns as it is just storing info into a seperate database file
+     * @param Scanner reader so that it would read lines and a string that holds the pathway to reach the database to print the info onto it
+     * @return None
      */
-    public static void enterCustomerInfo(){
+    public static void enterCustomerInfo(Scanner reader, String path){
         String code = "";
-        String name = "";
-        Scanner reader = new Scanner(System.in);
         // Storing customer information
         System.out.println("What is your first name?");
         String first = reader.nextLine();
@@ -73,27 +71,23 @@ class CustomerSystem{
         System.out.println("Where are you from?");
         String city = reader.nextLine();
         //Calling postal code validation method
-        String postal = validatePostalCode(code,name);
+        String postal = validatePostalCode(code,reader,path);
+        // CREDIT CARD VALIDATION METHOD
+        // CUSTOM ID 
     }
     /* @author Sophia Nguyen
      * Validates the postal code by scanning the first 3 characters that is inputted
-     * This is a procedural method because there is no return
-     * @param none
-     * @return none
+     * This method is used to validate the postal code and then return it 
+     * @param A string that holds the postal code, Scanner reader to read files, Path to find the PostalCode.csv
+     * @return The postal code
      */
-    public static String validatePostalCode(String postal, String user){
-        Scanner reader = new Scanner(System.in);
+    public static String validatePostalCode(String postal, Scanner reader, String path){
         try{ 
-            // Finding the postal code file for comparison
-            System.out.println("Please input your username on your local machine");
-            user = reader.nextLine();
-            System.out.println("Please input where you placed the Methods-assignment folder");
-            String loc = reader.nextLine();
             // User must type in a correct postal code or program will loop
             boolean valid = false;
             do{
                 // Reading the postal code file
-                File file = new File("/Users/" + user + "/" + loc + "/Methods-assignment/PostalCode.csv");
+                File file = new File(path + "/Methods-assignment/PostalCode.csv");
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 // User must type in at least 3 characters
                 boolean enough = false;
@@ -122,6 +116,8 @@ class CustomerSystem{
                         enough = false;
                     }
                 }while(enough == false);
+                //Closing buffer reader
+                br.close();
             }while(valid==false);
         }
         // Program cannot find file
@@ -146,26 +142,28 @@ class CustomerSystem{
     */
     public static void validateCreditCard(){
     }
+
+
+    //CUSTOM ID METHOD
+
+
     /* @author Sophia Nguyen
      * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
      * Checks the unique ID and if it matches, user's info will be printed
      * This is a procedural method because there is no return as it is to generate a data file 
-     * @param Scanner Scanner reader so that it can carry scanner through methods, A string for the username to enter files, String loc for the location of the folder
+     * @param Scanner reader so that it can carry scanner through methods, A string for the path to reach out to the database
      * @return none
      */
-    public static void generateCustomerDataFile(Scanner reader, String user, String loc){
+    public static void generateCustomerDataFile(Scanner reader, String path){
         try{
             System.out.println("Would you like to store your information on a csv file?");
             String store = reader.nextLine();
             // User wants to store their info on a csv file
             if(store.equals("Yes"))
             {
-                // Reaching out to the database to collect the needed information so that it could be placed into the customers file
-                System.out.println("Please reinput your username on your local machine");
-                user = reader.nextLine();
-                System.out.println("Please reinput where you placed the Methods-assignment folder");
-                loc = reader.nextLine();
                 // Allows user to name and decide the location of the file
+                System.out.println("What is your username?");
+                String user = reader.nextLine();
                 System.out.println("What would you like to name your file?");
                 String name = reader.nextLine();
                 System.out.println("Where would you like to place this file?");
@@ -175,28 +173,34 @@ class CustomerSystem{
                 // Creating the new csv file
                 File file = new File("/Users/" + user + "/" + upload + "/" + folder + "/" + name + ".csv");
                 // Reading the database
-                File data = new File("/Users/" + user + "/" + loc + "/Methods-assignment/Database.csv");
+                File data = new File(path + "/Methods-assignment/Database.csv");
                 BufferedReader br = new BufferedReader(new FileReader(data));
                 String line;
                 boolean print = false;
                 // Prompts user for their unique ID
                 System.out.println("Please reinput your ID. If file is not created, ID was wrong");
                 String ID = reader.nextLine();
+                // If the document is not blank and ID matches
+                // If ID is false program will loop
                 while ((line = br.readLine()) != null && print == false){
                     String newLine = line.substring(0,9);
                     // If ID is found then program will print out customers info
+                    // == 0 means no difference
                     if(ID.compareTo(newLine) == 0){
                         System.out.println("Valid");
-                        FileWriter csvWriter = new FileWriter(file);
-                        csvWriter.append (line);
-                        csvWriter.close();
+                        FileWriter cw = new FileWriter(file);
+                        // Append allows for text to be added without deleting past info
+                        cw.append (line);
+                        // Closing csv writer or else new csv file will be blank
+                        cw.close();
                         System.out.println("Thank you and have a nice day");
                         print = true;
                     }
                     else{
                         print = false;
                     }
-                } 
+                }
+                br.close(); 
             }
             // User does not want to store their info on a csv file
             else if(store.equals("No"))
