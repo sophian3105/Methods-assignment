@@ -3,6 +3,7 @@
 
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 import java.io.*;
 import java.io.File;
@@ -216,4 +217,18 @@ class CustomerSystem{
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
     *******************************************************************/
+
+    //@Author Daniel Yermashev
+    //Creating a rng that creates a 9 digit id for a customer between the ranges of 100000000 and 199999999 that will always start with 1 
+    //@param none
+    //return customer string with random customer id
+    public static String customerId(){
+        //Creating a rng variable id
+        Random id = new Random();
+        // Creating a rng range 100000000 to 199999999
+        int randNum = id.nextInt(199999999 - 100000000) + 100000000;
+        // Creating a string called cutomer
+        String customer = "Customer #" + randNum;
+        return customer;
+    }
 }
