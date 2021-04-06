@@ -18,6 +18,10 @@ class CustomerSystem{
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
+        System.out.println("What is your username on your local machine?");
+        String username = reader.nextLine();
+        System.out.println("Where did you put the Methods-assignment folder?");
+        String place = reader.nextLine();
 
 
         do{
@@ -31,7 +35,7 @@ class CustomerSystem{
             }
             else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you design the method return
-                generateCustomerDataFile();
+                generateCustomerDataFile(reader,username,place);
             }
             else{
                 System.out.println("Please type in a valid option (A number from 1-9)");
@@ -146,11 +150,10 @@ class CustomerSystem{
      * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
      * Checks the unique ID and if it matches, user's info will be printed
      * This is a procedural method because there is no return as it is to generate a data file 
-     * @param none
+     * @param Scanner Scanner reader so that it can carry scanner through methods, A string for the username to enter files, String loc for the location of the folder
      * @return none
      */
-    public static void generateCustomerDataFile(){
-        Scanner reader = new Scanner(System.in);
+    public static void generateCustomerDataFile(Scanner reader, String user, String loc){
         try{
             System.out.println("Would you like to store your information on a csv file?");
             String store = reader.nextLine();
@@ -159,9 +162,9 @@ class CustomerSystem{
             {
                 // Reaching out to the database to collect the needed information so that it could be placed into the customers file
                 System.out.println("Please reinput your username on your local machine");
-                String user = reader.nextLine();
+                user = reader.nextLine();
                 System.out.println("Please reinput where you placed the Methods-assignment folder");
-                String loc = reader.nextLine();
+                loc = reader.nextLine();
                 // Allows user to name and decide the location of the file
                 System.out.println("What would you like to name your file?");
                 String name = reader.nextLine();
