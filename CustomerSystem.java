@@ -69,7 +69,7 @@ class CustomerSystem{
         System.out.println("Where are you from?");
         String city = reader.nextLine();
         //Calling postal code validation method
-        validatePostalCode(code,name);
+        String postal = validatePostalCode(code,name);
     }
     /* @author Sophia Nguyen
      * Validates the postal code by scanning the first 3 characters that is inputted
@@ -142,12 +142,69 @@ class CustomerSystem{
     */
     public static void validateCreditCard(){
     }
-    /*
-    * This method may be edited to achieve the task however you like.
-    * The method may not nesessarily be a void return type
-    * This method may also be broken down further depending on your algorithm
-    */
+    /* @author Sophia Nguyen
+     * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
+     * Checks the unique ID and if it matches, user's info will be printed
+     * This is a procedural method because there is no return as it is to generate a data file 
+     * @param none
+     * @return none
+     */
     public static void generateCustomerDataFile(){
+        Scanner reader = new Scanner(System.in);
+        try{
+            System.out.println("Would you like to store your information on a csv file?");
+            String store = reader.nextLine();
+            // User wants to store their info on a csv file
+            if(store.equals("Yes"))
+            {
+                // Reaching out to the database to collect the needed information so that it could be placed into the customers file
+                System.out.println("Please reinput your username on your local machine");
+                String user = reader.nextLine();
+                System.out.println("Please reinput where you placed the Methods-assignment folder");
+                String loc = reader.nextLine();
+                // Allows user to name and decide the location of the file
+                System.out.println("What would you like to name your file?");
+                String name = reader.nextLine();
+                System.out.println("Where would you like to place this file?");
+                String upload = reader.nextLine();
+                System.out.println("What folder would you like to place this file? Please make sure this folder exists.");
+                String folder = reader.nextLine();
+                // Creating the new csv file
+                File file = new File("/Users/" + user + "/" + upload + "/" + folder + "/" + name + ".csv");
+                // Reading the database
+                File data = new File("/Users/" + user + "/" + loc + "/Methods-assignment/Database.csv");
+                BufferedReader br = new BufferedReader(new FileReader(data));
+                String line;
+                boolean print = false;
+                // Prompts user for their unique ID
+                System.out.println("Please reinput your ID. If file is not created, ID was wrong");
+                String ID = reader.nextLine();
+                while ((line = br.readLine()) != null && print == false){
+                    String newLine = line.substring(0,9);
+                    // If ID is found then program will print out customers info
+                    if(ID.compareTo(newLine) == 0){
+                        System.out.println("Valid");
+                        FileWriter csvWriter = new FileWriter(file);
+                        csvWriter.append (line);
+                        csvWriter.close();
+                        System.out.println("Thank you and have a nice day");
+                        print = true;
+                    }
+                    else{
+                        print = false;
+                    }
+                } 
+            }
+            // User does not want to store their info on a csv file
+            else if(store.equals("No"))
+            {
+                System.out.println("Thank you and have a nice day");
+            } 
+        }
+        // If the IO operation fails
+        catch(IOException e){
+            System.out.println("Fail");
+        }
     }
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
