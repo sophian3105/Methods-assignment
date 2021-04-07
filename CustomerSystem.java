@@ -65,6 +65,7 @@ class CustomerSystem{
     public static void enterCustomerInfo(Scanner reader, String path){
         String code = "";
         String card = "";
+        int num = 0;
         int sum1 = 0;
         int sum2 = 0; 
         // Storing customer information
@@ -77,9 +78,9 @@ class CustomerSystem{
         //Calling postal code validation method
         String postal = validatePostalCode(code, reader, path);
         // Calling credit card validation method
-        validateCreditCard(reader, card, sum1, sum2);
+        validateCreditCard(reader, card);
         // Generates a custom ID
-        System.out.println(customerId()); 
+        int id = customerId(num, path);
     }
     /* @author Sophia Nguyen
      * Validates the postal code by scanning the first 3 characters that is inputted
@@ -146,73 +147,97 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static boolean validateCreditCard(Scanner reader, String card,int sum1, int sum2){
-        String space = "";
-  
-        boolean enough = false;
+    public static String validateCreditCard(Scanner reader,String card){
+        boolean valid = false;
         do{
-            System.out.println("Enter credit card number");
-            card = reader.nextLine();
-            int len = card.length();
-            if (len >= 9){
-                for(int i = len-1; i >= 0; i--){
-                    space = space + card.charAt(i);
-                }
-                sum1 = 0;
-                sum2 = 0;
-   
-                for(int j = 0; j < len; j++){
-                    if(j % 2 == 0){
-                        String num = Character.toString(space.charAt(j));
-                        sum1 += Integer.parseInt(num);
+            String space = "";
+            boolean enough = false;
+            do{
+                System.out.println("Enter credit card number. Don't add spaces");
+                card = reader.nextLine();
+                int len = card.length();
+                if (len >= 9){
+                    for(int i = (card.length()-1); i >= 0; i--){
+                        space = space + card.charAt(i);
                     }
-                    else{
-                        int num = Integer.parseInt(Character.toString(space.charAt(j)));
-                        int doubleNum = num * 2;
-   
-                        if (doubleNum > 9){
-                            int numSum = 0;
-                            do{
-                                int remainder = doubleNum % 10;
-                                numSum = numSum + remainder;
-                                doubleNum = doubleNum /10;
-                            } while(doubleNum > 0);
-                            sum2 += numSum;
+                    int sum1 = 0;
+                    int sum2 = 0;
+                    for(int j = 0; j < len; j++){
+                        if(j % 2 == 0){
+                            String num = Character.toString(space.charAt(j));
+                            sum1 += Integer.parseInt(num);
                         }
                         else{
-                            sum2 += doubleNum;
+                            int num = Integer.parseInt(Character.toString(space.charAt(j)));
+                            int doubleNum = num * 2;
+                            if (doubleNum > 9){
+                                int numSum = 0;
+                                do{
+                                    int remainder = doubleNum % 10;
+                                    numSum = numSum + remainder;
+                                    doubleNum = doubleNum /10;
+                                } while(doubleNum > 0);
+                                sum2 += numSum;
+                            }
+                            else{
+                                sum2 += doubleNum;
+                            }
                         }
                     }
+                    int total = sum1 + sum2;
+                    if(total%10 == 0){
+                        System.out.println("Valid");
+                        valid = true;
+                    }
+                    else{
+                        System.out.println("Invalid");
+                        valid = false;
+                    }
+                    enough = true;
                 }
-                enough = true;
-            }
-            else{
-                enough = false;
-            }
-        }while(enough == false);
-        int total = sum1 + sum2;
-        if(total%10 == 0){
-            System.out.println("Valid");
-            return true;
-        }
-        else{
-            System.out.println("Invalid");
-            return false;
-        }
+                else{
+                    System.out.println("Invalid, please input at least 9 characters");
+                    enough = false;
+                }
+            }while(enough == false);
+        }while (valid == false);
+        return card;
     }
+ 
+ 
     //@Author Daniel Yermashev
     //Creating a rng that creates a 9 digit id for a customer between the ranges of 100000000 and 199999999 that will always start with 1 
     //@param none
     //return customer string with random customer id
-    public static String customerId(){
-        //Creating a rng variable id
+    public static int customerId(int randNum, String path){
         Random id = new Random();
-        // Creating a rng range 100000000 to 199999999
-        int randNum = id.nextInt(199999999 - 100000000) + 100000000;
-        // Creating a string called cutomer
-        String customer = "Customer #" + randNum;
-        return customer;
+        try{
+            // Making sure that ID is always unique by comparing with database
+            File database = new File(path + "/Methods-assignment/Database.csv");
+            BufferedReader br = new BufferedReader(new FileReader(database));
+            String line;
+            // Generates a 9 digit random integer
+            randNum = id.nextInt(199999999-100000000)+100000000;
+            while ((line = br.readLine()) != null){
+                String newLine = line.substring(0,9);
+                int compare = Integer.parseInt(newLine);
+                int diff = (Integer.compare(compare,randNum));
+                // Just in case there is already an ID that matches the generator
+                // If that is the case generator will create another number
+                if (diff == 0){
+                    randNum = id.nextInt(199999999-100000000)+100000000;
+                }
+                else{
+                }
+            }
+            br.close();
+        }
+        catch(Exception e){
+        }
+        return randNum;
     }
+ 
+ 
     /* @author Sophia Nguyen
      * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
      * Checks the unique ID and if it matches, user's info will be printed
