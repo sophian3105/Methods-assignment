@@ -147,35 +147,49 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static String validateCreditCard(Scanner reader,String card){
+
+    //@Author Daniel Yermashev
+    //Using the luhn algorythm to validate user inputed credit card numbers
+    //@param a scanner to read the user input, a string that holds the credit card number that user enters
+    //return the users card number
+    public static String validateCreditCard(Scanner reader, String card){
         boolean valid = false;
         do{
             String space = "";
             boolean enough = false;
             do{
                 System.out.println("Enter credit card number. Don't add spaces");
+                // Getting the users card number
                 card = reader.nextLine();
+                // Getting the length of the card
                 int len = card.length();
                 if (len >= 9){
+                    // Loop that reverses the card number
                     for(int i = (card.length()-1); i >= 0; i--){
                         space = space + card.charAt(i);
                     }
+                    // the sums of the odd and even numbers
                     int sum1 = 0;
                     int sum2 = 0;
+                    // Getting Every odd digit
                     for(int j = 0; j < len; j++){
                         if(j % 2 == 0){
                             String num = Character.toString(space.charAt(j));
+                            // Converting the string to and integer
                             sum1 += Integer.parseInt(num);
                         }
                         else{
+                            // Getting every even number
                             int num = Integer.parseInt(Character.toString(space.charAt(j)));
                             int doubleNum = num * 2;
                             if (doubleNum > 9){
                                 int numSum = 0;
                                 do{
-                                    int remainder = doubleNum % 10;
+                                    // Sum of the numbers
+                                    int remainder = doubleNum % 10; // Getting the remainder
                                     numSum = numSum + remainder;
                                     doubleNum = doubleNum /10;
+                                    // Creating the sum
                                 } while(doubleNum > 0);
                                 sum2 += numSum;
                             }
@@ -184,11 +198,14 @@ class CustomerSystem{
                             }
                         }
                     }
+                    // The total of all sums
                     int total = sum1 + sum2;
+                    // If the credit card is valid
                     if(total%10 == 0){
                         System.out.println("Valid");
                         valid = true;
                     }
+                    // If the credit card is not valid
                     else{
                         System.out.println("Invalid");
                         valid = false;
@@ -196,11 +213,13 @@ class CustomerSystem{
                     enough = true;
                 }
                 else{
+                    // If the user enters less than 9 digits
                     System.out.println("Invalid, please input at least 9 characters");
                     enough = false;
                 }
             }while(enough == false);
         }while (valid == false);
+        // Returning the card
         return card;
     }
  
