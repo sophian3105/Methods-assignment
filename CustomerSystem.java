@@ -1,7 +1,9 @@
-// Throughout this project, the use of data structures are not permitted such as methods like .split and .toCharArray
-
-
-
+/*
+ * Date: April 7,2021
+ * Name: Sophia and Daniel
+ * Teacher: Mr.Ho
+ * Description: Methods Assignment
+ */
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
@@ -65,9 +67,7 @@ class CustomerSystem{
     public static void enterCustomerInfo(Scanner reader, String path){
         String code = "";
         String card = "";
-        int num = 0;
-        int sum1 = 0;
-        int sum2 = 0; 
+        int num = 0; 
         // Storing customer information
         System.out.println("What is your first name?");
         String first = reader.nextLine();
@@ -78,9 +78,25 @@ class CustomerSystem{
         //Calling postal code validation method
         String postal = validatePostalCode(code, reader, path);
         // Calling credit card validation method
-        validateCreditCard(reader, card);
+        String cardNum = validateCreditCard(reader, card);
         // Generates a custom ID
         int id = customerId(num, path);
+        String customer = "Please write this number down. Customer ID: " + id;
+        System.out.println(customer);
+        try{
+            // Opening file in append form so that previous info is not deleted
+            // Append boolean = true
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path + "/Methods-assignment/Database.csv",true));  
+            PrintWriter pw = new PrintWriter(bw);
+            // Adding info into the database file
+            String info = "\n" + id + "|" + first + "|" + last + "|" + city + "|" + postal + "|" + cardNum;
+            // Appending the file will allow more lines to be added to the database without deleting past data
+            bw.append(info);
+            bw.close();
+            pw.close();
+        }
+        catch(Exception e){
+        }
     }
     /* @author Sophia Nguyen
      * Validates the postal code by scanning the first 3 characters that is inputted
@@ -142,12 +158,6 @@ class CustomerSystem{
         int len = x.length();
         return len;
     }
-    /*
-    * This method may be edited to achieve the task however you like.
-    * The method may not nesessarily be a void return type
-    * This method may also be broken down further depending on your algorithm
-    */
-
     //@Author Daniel Yermashev
     //Using the luhn algorythm to validate user inputed credit card numbers
     //@param a scanner to read the user input, a string that holds the credit card number that user enters
@@ -222,8 +232,6 @@ class CustomerSystem{
         // Returning the card
         return card;
     }
- 
- 
     //@Author Daniel Yermashev
     //Creating a rng that creates a 9 digit id for a customer between the ranges of 100000000 and 199999999 that will always start with 1 
     //@param none
@@ -254,9 +262,7 @@ class CustomerSystem{
         catch(Exception e){
         }
         return randNum;
-    }
- 
- 
+    } 
     /* @author Sophia Nguyen
      * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
      * Checks the unique ID and if it matches, user's info will be printed
