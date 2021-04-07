@@ -76,9 +76,10 @@ class CustomerSystem{
         String city = reader.nextLine();
         //Calling postal code validation method
         String postal = validatePostalCode(code, reader, path);
-        // CREDIT CARD VALIDATION METHOD
-        System.out.println(validateCreditCard(reader, card, sum1, sum2));
-        // CUSTOM ID 
+        // Calling credit card validation method
+        validateCreditCard(reader, card, sum1, sum2);
+        // Generates a custom ID
+        System.out.println(customerId()); 
     }
     /* @author Sophia Nguyen
      * Validates the postal code by scanning the first 3 characters that is inputted
@@ -191,20 +192,27 @@ class CustomerSystem{
         }while(enough == false);
         int total = sum1 + sum2;
         if(total%10 == 0){
+            System.out.println("Valid");
             return true;
         }
         else{
+            System.out.println("Invalid");
             return false;
         }
     }
- 
-        //C:\Users\playa\OneDrive\Desktop\Methods-assignment\CustomerSystem.java
-    
-
-
-    //CUSTOM ID METHOD
-
-
+    //@Author Daniel Yermashev
+    //Creating a rng that creates a 9 digit id for a customer between the ranges of 100000000 and 199999999 that will always start with 1 
+    //@param none
+    //return customer string with random customer id
+    public static String customerId(){
+        //Creating a rng variable id
+        Random id = new Random();
+        // Creating a rng range 100000000 to 199999999
+        int randNum = id.nextInt(199999999 - 100000000) + 100000000;
+        // Creating a string called cutomer
+        String customer = "Customer #" + randNum;
+        return customer;
+    }
     /* @author Sophia Nguyen
      * Creates a csv file that stores all of the information that was inputted from before by collecting information from the database
      * Checks the unique ID and if it matches, user's info will be printed
@@ -270,22 +278,5 @@ class CustomerSystem{
         catch(IOException e){
             System.out.println("Fail");
         }
-    }
-    /*******************************************************************
-    *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
-    *******************************************************************/
-
-    //@Author Daniel Yermashev
-    //Creating a rng that creates a 9 digit id for a customer between the ranges of 100000000 and 199999999 that will always start with 1 
-    //@param none
-    //return customer string with random customer id
-    public static String customerId(){
-        //Creating a rng variable id
-        Random id = new Random();
-        // Creating a rng range 100000000 to 199999999
-        int randNum = id.nextInt(199999999 - 100000000) + 100000000;
-        // Creating a string called cutomer
-        String customer = "Customer #" + randNum;
-        return customer;
     }
 }
