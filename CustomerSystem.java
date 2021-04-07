@@ -287,13 +287,13 @@ class CustomerSystem{
                 System.out.println("What is the pathway to reach the common folders (e.g Desktop)?");
                 String folderPath = reader.nextLine();
                 System.out.println("In what common folder would you like to place this in?");
-                String commonFolders = reader.nextLine();
+                String commonFolder = reader.nextLine();
                 System.out.println("What folder would you like to place this file? Please make sure this folder exists.");
                 String folder = reader.nextLine();
                 System.out.println("What would you like to name your file?");
                 String name = reader.nextLine();
                 // Creating the new csv file
-                File file = new File("/Users/" + folderPath + "/" + commonFolders + "/" + folder + "/" + name + ".csv");
+                File file = new File(folderPath + "/" + commonFolder + "/" + folder + "/" + name + ".csv");
                 // Reading the database
                 File data = new File(path + "/Methods-assignment/Database.csv");
                 BufferedReader br = new BufferedReader(new FileReader(data));
