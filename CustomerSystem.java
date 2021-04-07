@@ -64,10 +64,7 @@ class CustomerSystem{
      * @param Scanner reader so that it would read lines and a string that holds the pathway to reach the database to print the info onto it
      * @return None
      */
-    public static void enterCustomerInfo(Scanner reader, String path){
-        String code = "";
-        String card = "";
-        int num = 0; 
+    public static void enterCustomerInfo(Scanner reader, String path){ 
         // Storing customer information
         System.out.println("What is your first name?");
         String first = reader.nextLine();
@@ -76,10 +73,13 @@ class CustomerSystem{
         System.out.println("Where are you from?");
         String city = reader.nextLine();
         //Calling postal code validation method
+        String code = "";
         String postal = validatePostalCode(code, reader, path);
         // Calling credit card validation method
+        String card = "";
         String cardNum = validateCreditCard(reader, card);
         // Generates a custom ID
+        int num = 0;
         int id = customerId(num, path);
         String customer = "Please write this number down. Customer ID: " + id;
         System.out.println(customer);
@@ -117,6 +117,7 @@ class CustomerSystem{
                 do{
                     System.out.println("What is your postal code? Please input at least 3 characters and make sure it is correct or program will loop.");
                     postal = reader.nextLine();
+                        // If there are at least 3 characters
                         if (calculateCharacters(postal)>=3){
                             String line;
                             while ((line = br.readLine()) != null && valid == false){
@@ -128,16 +129,18 @@ class CustomerSystem{
                                     System.out.println("Valid");
                                     valid = true;
                                 }
+                                // Not valid since there are differences
                                 else{
                                     valid = false;
                                 }
                             }
                             enough = true;
                         }
-                    else{
-                        System.out.println("Invalid, please input at least 3 characters");
-                        enough = false;
-                    }
+                        //User inputted less than 3 characters
+                        else{
+                            System.out.println("Invalid, please input at least 3 characters");
+                            enough = false;
+                        }
                 }while(enough == false);
                 //Closing buffer reader
                 br.close();
@@ -147,6 +150,7 @@ class CustomerSystem{
         catch (IOException e){ 
             System.out.println("Invalid");
         }
+        // Returns the postal code to store it in database
         return postal;
     }
     /* @author Sophia Nguyen
@@ -278,31 +282,33 @@ class CustomerSystem{
             if(store.equals("Yes"))
             {
                 // Allows user to name and decide the location of the file
-                System.out.println("What is your username?");
-                String user = reader.nextLine();
-                System.out.println("What would you like to name your file?");
-                String name = reader.nextLine();
-                System.out.println("Where would you like to place this file?");
-                String upload = reader.nextLine();
+                // Must ask for path to get to the common folders because user might not want to store it in the same place as the Methods-assignment folder
+                // We cannot just ask for the user because the different operating systems have different pathways to reach their common folders
+                System.out.println("What is the pathway to reach the common folders (e.g Desktop)?");
+                String folderPath = reader.nextLine();
+                System.out.println("In what common folder would you like to place this in?");
+                String commonFolders = reader.nextLine();
                 System.out.println("What folder would you like to place this file? Please make sure this folder exists.");
                 String folder = reader.nextLine();
+                System.out.println("What would you like to name your file?");
+                String name = reader.nextLine();
                 // Creating the new csv file
-                File file = new File("/Users/" + user + "/" + upload + "/" + folder + "/" + name + ".csv");
+                File file = new File("/Users/" + folderPath + "/" + commonFolders + "/" + folder + "/" + name + ".csv");
                 // Reading the database
                 File data = new File(path + "/Methods-assignment/Database.csv");
                 BufferedReader br = new BufferedReader(new FileReader(data));
-                String line;
                 boolean print = false;
                 // Prompts user for their unique ID
                 System.out.println("Please reinput your ID. If file is not created, ID was wrong");
-                String ID = reader.nextLine();
+                String id = reader.nextLine();
                 // If the document is not blank and ID matches
                 // If ID is false program will loop
+                String line;
                 while ((line = br.readLine()) != null && print == false){
                     String newLine = line.substring(0,9);
                     // If ID is found then program will print out customers info
                     // == 0 means no difference
-                    if(ID.compareTo(newLine) == 0){
+                    if(id.compareTo(newLine) == 0){
                         System.out.println("Valid");
                         FileWriter cw = new FileWriter(file);
                         // Append allows for text to be added without deleting past info
