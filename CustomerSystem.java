@@ -64,6 +64,9 @@ class CustomerSystem{
      */
     public static void enterCustomerInfo(Scanner reader, String path){
         String code = "";
+        String card = "";
+        int sum1 = 0;
+        int sum2 = 0; 
         // Storing customer information
         System.out.println("What is your first name?");
         String first = reader.nextLine();
@@ -72,8 +75,9 @@ class CustomerSystem{
         System.out.println("Where are you from?");
         String city = reader.nextLine();
         //Calling postal code validation method
-        String postal = validatePostalCode(code,reader,path);
+        String postal = validatePostalCode(code, reader, path);
         // CREDIT CARD VALIDATION METHOD
+        System.out.println(validateCreditCard(reader, card, sum1, sum2));
         // CUSTOM ID 
     }
     /* @author Sophia Nguyen
@@ -141,8 +145,61 @@ class CustomerSystem{
     * The method may not nesessarily be a void return type
     * This method may also be broken down further depending on your algorithm
     */
-    public static void validateCreditCard(){
+    public static boolean validateCreditCard(Scanner reader, String card,int sum1, int sum2){
+        String space = "";
+  
+        boolean enough = false;
+        do{
+            System.out.println("Enter credit card number");
+            card = reader.nextLine();
+            int len = card.length();
+            if (len >= 9){
+                for(int i = len-1; i >= 0; i--){
+                    space = space + card.charAt(i);
+                }
+                sum1 = 0;
+                sum2 = 0;
+   
+                for(int j = 0; j < len; j++){
+                    if(j % 2 == 0){
+                        String num = Character.toString(space.charAt(j));
+                        sum1 += Integer.parseInt(num);
+                    }
+                    else{
+                        int num = Integer.parseInt(Character.toString(space.charAt(j)));
+                        int doubleNum = num * 2;
+   
+                        if (doubleNum > 9){
+                            int numSum = 0;
+                            do{
+                                int remainder = doubleNum % 10;
+                                numSum = numSum + remainder;
+                                doubleNum = doubleNum /10;
+                            } while(doubleNum > 0);
+                            sum2 += numSum;
+                        }
+                        else{
+                            sum2 += doubleNum;
+                        }
+                    }
+                }
+                enough = true;
+            }
+            else{
+                enough = false;
+            }
+        }while(enough == false);
+        int total = sum1 + sum2;
+        if(total%10 == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
+ 
+        //C:\Users\playa\OneDrive\Desktop\Methods-assignment\CustomerSystem.java
+    
 
 
     //CUSTOM ID METHOD
