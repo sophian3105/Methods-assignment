@@ -89,7 +89,7 @@ class CustomerSystem{
             BufferedWriter bw = new BufferedWriter(new FileWriter(path + "/Methods-assignment/Database.csv",true));  
             PrintWriter pw = new PrintWriter(bw);
             // Adding info into the database file
-            String info = "\n" + id + "|" + first + "|" + last + "|" + city + "|" + postal + "|" + cardNum;
+            String info = "\n" + id + "|" + first + "|" + last + "|" + city + "|" + postal + "|" + cardNum + "|";
             // Appending the file will allow more lines to be added to the database without deleting past data
             bw.append(info);
             bw.close();
@@ -311,7 +311,6 @@ class CustomerSystem{
                     if(id.compareTo(newLine) == 0){
                         System.out.println("Valid");
                         FileWriter cw = new FileWriter(file);
-                        // Append allows for text to be added without deleting past info
                         cw.append (line);
                         // Closing csv writer or else new csv file will be blank
                         cw.close();
